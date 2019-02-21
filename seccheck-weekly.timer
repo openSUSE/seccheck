@@ -1,0 +1,10 @@
+[Unit]
+Description=Weekly seccheck run
+
+[Timer]
+OnCalendar=weekly
+AccuracySec=6h
+Persistent=true
+
+[Install]
+WantedBy=seccheck-weekly.service

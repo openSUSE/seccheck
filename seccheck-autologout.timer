@@ -1,0 +1,10 @@
+[Unit]
+Description=seccheck autologout run
+
+[Timer]
+OnCalendar=*:0/1
+AccuracySec=1m
+Persistent=true
+
+[Install]
+WantedBy=seccheck-autologout.service

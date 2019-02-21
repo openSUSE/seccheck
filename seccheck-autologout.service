@@ -1,0 +1,11 @@
+[Unit]
+Description=seccheck autologout run
+ConditionACPower=true
+
+[Service]
+Type=oneshot
+ExecStart=/usr/lib/secchk/autologout.sh -c /etc/security/autologout.conf 
+Nice=19
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
+Environment=HOME=/root

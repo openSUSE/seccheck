@@ -1,0 +1,11 @@
+[Unit]
+Description=Monthly seccheck run
+ConditionACPower=true
+
+[Service]
+Type=oneshot
+ExecStart=/usr/lib/secchk/security-control.sh monthly
+Nice=19
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
+Environment=HOME=/root

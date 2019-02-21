@@ -1,0 +1,11 @@
+[Unit]
+Description=Weekly seccheck run
+ConditionACPower=true
+
+[Service]
+Type=oneshot
+ExecStart=/usr/lib/secchk/security-control.sh weekly
+Nice=19
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
+Environment=HOME=/root
