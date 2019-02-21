@@ -94,7 +94,7 @@ check_promisc () {
     local output_file=`mktemp -t mounted_with_missing_nosuid.XXXX` # TEMPDIR is set but not exported.. does it work?
 
     # local devices
-    for IF in $(grep "$(date +"%b %e")" /var/log/messages \
+    for IF in $(journalctl --since "yesterday" --until "today" \
               | grep "$HOSTNAME kernel: device .* entered promiscuous mode" \
               | awk -F' ' '{print $7}')
     do
@@ -107,7 +107,7 @@ check_promisc () {
     fi
     rm -f "$output_file"
     # remote devices
-    for LL in $(grep "$(date +"%b %e")" /var/log/messages \
+    for LL in $(journalctl --since "yesterday" --until "today" \
               | grep "kernel: device .* entered promiscuous mode" \
           | grep -v "$HOSTAME")
     do
