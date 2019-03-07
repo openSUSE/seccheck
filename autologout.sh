@@ -79,24 +79,20 @@ function send_msg() {
 
 # Kill terminal 
 function killit() {
-	sleep ${DELAY_TIMEOUT_TMP}
-	NEW_IDLE=`tty_idle ${TTY[$1]}`
-	if [ $((${NEW_IDLE}/60)) -ge ${TTY_TIMEOUT_TMP} ]; then
-		PIDS=`ps -eo pid,tty | grep ${TTY[$1]#/dev/} | awk '{print $1}' | tr '\n' ' '`
-		kill -HUP $PIDS &> /dev/null
-		MIN=`format_time ${NEW_IDLE}`
-		logger "autologout: Terminated ${USER[$1]}:${GROUP[$1]} on ${TTY[$1]} after being idle for ${MIN} (allowed ${TTY_TIMEOUT_TMP} min)."
-		sleep $KILL_WAIT
-		for pid in $PIDS; do
-			if kill -0 $pid &> /dev/null; then 
-				kill -TERM $pid &> /dev/null
-				sleep 2
-				if kill -0 $pid &> /dev/null; then
-					kill -KILL $pid &> /dev/null
-				fi
+	PIDS=`ps -eo pid,tty | grep ${TTY[$1]#/dev/} | awk '{print $1}' | tr '\n' ' '`
+	kill -HUP $PIDS &> /dev/null
+	MIN=`format_time ${IDLE[$i]}`
+	logger "autologout: Terminated ${USER[$1]}:${GROUP[$1]} on ${TTY[$1]} after being idle for ${MIN} (allowed ${TTY_TIMEOUT_TMP} min)."
+	sleep $KILL_WAIT
+	for pid in $PIDS; do
+		if kill -0 $pid &> /dev/null; then 
+			kill -TERM $pid &> /dev/null
+			sleep 2
+			if kill -0 $pid &> /dev/null; then
+				kill -KILL $pid &> /dev/null
 			fi
-		done
-	fi
+		fi
+	done
 }
 
 # Check for SSH session
@@ -166,13 +162,17 @@ function check_idle() {
 		TTY_TIMEOUT_TMP=${CONF_TIMEOUT%:*}
 		DELAY_TIMEOUT_TMP=${CONF_TIMEOUT#*:}
 		MIN=`format_time ${IDLE[$i]}`
-		if [ $((${IDLE[$i]}/60)) -ge ${TTY_TIMEOUT_TMP} ]; then
+		DIFF=$((${IDLE[$i]} - (${TTY_TIMEOUT_TMP}*60) ))
+		if [ $DIFF -gt 0 ]; then
 			if [ $DRY_RUN -eq 1 ]; then
 				LOGOUT="(Subject to logout)"
 				send_msg $i
 			else
-				send_msg $i
-				killit $i &
+				if [ $DIFF -lt $DEFAULT_DELAY ]; then
+					send_msg $i
+				else
+					killit $i
+				fi
 			fi
 		fi
 		if [ $DRY_RUN -eq 1 ]; then
