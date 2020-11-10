@@ -4,7 +4,7 @@ ConditionACPower=true
 
 [Service]
 Type=oneshot
-ExecStart=/usr/lib/secchk/security-control.sh daily
+ExecStart=/usr/libexec/secchk/security-control.sh daily
 Nice=19
 IOSchedulingClass=best-effort
 IOSchedulingPriority=7
