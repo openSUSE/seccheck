@@ -36,7 +36,7 @@ fi
 #done
 
 echo '
-NOTE: have you checked http://www.novell.com/products/security.html for security updates?!
+NOTE: have you checked https://www.suse.com/support/update/ for security updates?!
 '
 
 cat "$OLD1"

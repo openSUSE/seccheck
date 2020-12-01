@@ -4,7 +4,7 @@ ConditionACPower=true
 
 [Service]
 Type=oneshot
-ExecStart=/usr/lib/secchk/autologout.sh -c /etc/security/autologout.conf 
+ExecStart=/usr/libexec/secchk/autologout.sh -c /etc/security/autologout.conf 
 Nice=19
 IOSchedulingClass=best-effort
 IOSchedulingPriority=7
